@@ -97,7 +97,8 @@ class Msg
         
         
         $ret = curl_exec($ch);
-        
+        Log::write('发送参数: '.json_encode($msg));
+        Log::write('发送结果: '.json_encode($ret));
         curl_close($ch);
         
         
