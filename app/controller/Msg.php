@@ -63,9 +63,15 @@ class Msg
         //     return json($res);
         // }
         
+        //参数
+        //{"ToUserName":"gh_78591558a86c","FromUserName":"ob38cw-sjjr8LVz9oXEbcCyf1j38","CreateTime":1688055642,"MsgType":"text","Content":"444","MsgId":24167148576592230}
+        
+        
+        
         $res = Request::param(false);
         Log::write('收到的参数: '.json_encode($res));
 
+        $this->send($res['FromUserName'], $res['Content'] );
         
         
         return json(['success']);
@@ -77,46 +83,36 @@ class Msg
 
 
     /**
-     * 根据id查询todo数据
+     * 请求三方处理
      * @param $action `string` 类型，枚举值，等于 `"inc"` 时，表示计数加一；等于 `"reset"` 时，表示计数重置（清零）
      * @return Json
      */
-    public function updateCount($action): Json
+    protected function cc($url, $msg): Json
     {
-        try {
-            if ($action == "inc") {
-                $data = (new Counters)->find(1);
-                if ($data == null) {
-                    $count = 1;
-                }else {
-                    $count = $data["count"] + 1;
-                }
-    
-                $counters = new Counters;
-                $counters->create(
-                    ["count" => $count, 'id' => 1],
-                    ["count", 'id'],
-                    true
-                );
-            }else if ($action == "clear") {
-                Counters::destroy(1);
-                $count = 0;
-            }
+        $ch = curl_init($url);
 
-            $res = [
-                "code" => 0,
-                "data" =>  $count
-            ];
-            Log::write('updateCount rsp: '.json_encode($res));
-            return json($res);
-        } catch (Exception $e) {
-            $res = [
-                "code" => -1,
-                "data" => [],
-                "errorMsg" => ("更新计数异常" . $e->getMessage())
-            ];
-            Log::write('updateCount rsp: '.json_encode($res));
-            return json($res);
-        }
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $msg);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        
+        
+        $ret = curl_exec($ch);
+        
+        curl_close($ch);
+        
+        
+        
+        
+    }
+    
+    
+    
+    protected function send($openid, $content) {
+        
+        $msg = ['touser'=>$openid, 'msgtype'=>"text", 'text'=>['content'=>'你发送的内容是：'.$content]];
+        
+        $url = 'http://api.weixin.qq.com/cgi-bin/message/custom/send';
+        
+        $this->cc($url, $msg);
     }
 }
