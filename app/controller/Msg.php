@@ -71,6 +71,8 @@ class Msg
         $res = Request::param(false);
         Log::write('收到的参数: '.json_encode($res));
 
+        Log::write('我的openid是: '.$_SERVER['X-WX-OPENID'] );
+
         $this->send($res['FromUserName'], $res['Content'] );
         
         
