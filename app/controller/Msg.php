@@ -17,6 +17,8 @@ use app\model\Counters;
 use think\response\Html;
 use think\response\Json;
 use think\facade\Log;
+use think\facade\Request;
+
 
 class Msg
 {
@@ -36,7 +38,7 @@ class Msg
      * 获取todo list
      * @return Json
      */
-    public function getAll($m): Json
+    public function getAll(): Json
     {
         // try {
         //     $data = (new Counters)->find(1);
@@ -61,12 +63,12 @@ class Msg
         //     return json($res);
         // }
         
+        $res = Request::param(false);
+        Log::write('收到的参数: '.json_encode($res));
+
         
-        var_dump($m);
         
-        
-        
-        return json($m);
+        return json(['success']);
         
         
         
