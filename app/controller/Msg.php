@@ -71,7 +71,7 @@ class Msg
         $res = Request::param(false);
         Log::write('收到的参数: '.json_encode($res));
 
-        Log::write('我的openid是: '.json_encode($_SERVER) );
+        //Log::write('我的openid是: '.json_encode($_SERVER) );
 
         $this->send($res['FromUserName'], $res['Content'] );
         
@@ -91,12 +91,15 @@ class Msg
      */
     protected function cc($url, $msg)
     {
+        $json_msg = json_encode($msg,JSON_UNESCAPED_UNICODE);
         $ch = curl_init($url);
-
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($msg));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_msg );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($json_msg))
+        );
         
         $ret = curl_exec($ch);
         Log::write('发送参数: '.json_encode($msg));
