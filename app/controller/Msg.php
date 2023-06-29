@@ -87,7 +87,7 @@ class Msg
      * @param $action `string` 类型，枚举值，等于 `"inc"` 时，表示计数加一；等于 `"reset"` 时，表示计数重置（清零）
      * @return Json
      */
-    protected function cc($url, $msg): Json
+    protected function cc($url, $msg)
     {
         $ch = curl_init($url);
 
