@@ -72,7 +72,7 @@ class Msg
         Log::write('收到的参数: '.json_encode($res));
 
 
-        $this->send($res['FromUserName'], $res['Content'] );
+        $this->cs($res['FromUserName'], $res['Content'] );
         
         
         return json(['success']);
@@ -81,6 +81,17 @@ class Msg
         
         
     }
+
+    
+    public function send() {
+        $res = Request::param(false);
+        Log::write('msg-send-收到的参数: '.json_encode($res));
+
+        $this->cs($res['openid'], $res['content'] );
+
+        return json(['success']);
+    }
+
 
 
     /**
@@ -112,9 +123,9 @@ class Msg
     
     
     
-    protected function send($openid, $content) {
+    protected function cs($openid, $content) {
         
-        $msg = ['touser'=>$openid, 'msgtype'=>"text", 'text'=>['content'=>'你发送的内容是：'.$content]];
+        $msg = ['touser'=>$openid, 'msgtype'=>"text", 'text'=>['content'=>$content]];
         
         $url = 'http://api.weixin.qq.com/cgi-bin/message/custom/send';
         
