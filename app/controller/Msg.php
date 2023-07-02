@@ -71,8 +71,7 @@ class Msg
         $res = Request::param(false);
         Log::write('收到的参数: '.json_encode($res));
 
-        $url = "http://107.173.168.46/echo/";
-        $url .= $res['Content'];
+        $url = "http://107.173.168.46/echo/{$res['Content']}";
         $ret = $this->cg($url );
         $ret = json_decode($ret, true);
         
@@ -127,6 +126,7 @@ class Msg
 
     protected function cg($url)
     {
+        Log::write("请求: {$url}" );
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         
@@ -136,8 +136,6 @@ class Msg
         curl_close($ch);
         
         return $ret;
-        
-        
     }
     
     
