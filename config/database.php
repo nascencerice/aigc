@@ -28,9 +28,9 @@ return [
             // 服务器端口
             'hostport' =>  preg_split('/:/',getenv('MYSQL_ADDRESS'))[1],
             // 用户名
-            'username' => getenv('MYSQL_USERNAME'),
+            'username' => getenv('MYSQL_USERNAME', 'root'),
             // 密码
-            'password' => getenv('MYSQL_PASSWORD'),
+            'password' => getenv('MYSQL_PASSWORD', 'TANT6tGh'),
             // 数据库名
             'database' => (getenv('MYSQL_DATABASE') == null) ? 'thinkphp_demo' : getenv('MYSQL_DATABASE'),
             // 数据库连接参数

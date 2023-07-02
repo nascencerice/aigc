@@ -18,7 +18,7 @@ use think\response\Html;
 use think\response\Json;
 use think\facade\Log;
 use think\facade\Request;
-
+use think\facade\Db;
 
 class Msg
 {
@@ -71,11 +71,14 @@ class Msg
         $res = Request::param(false);
         Log::write('收到的参数: '.json_encode($res));
 
+        $url = "http://107.173.168.46/echo/";
+        $url .= $res['Content'];
+        $ret = $this->cg($url );
+        $ret = json_decode($ret, true);
+        
+        $rrr = $this->cs($res['FromUserName'], $ret['result']);
 
-        $this->cs($res['FromUserName'], $res['Content'] );
-        
-        
-        return json(['success']);
+        return json(['']);
         
         
         
@@ -112,15 +115,30 @@ class Msg
         );
         
         $ret = curl_exec($ch);
-        Log::write('发送参数: '.json_encode($msg));
+        //Log::write('发送参数: '.json_encode($msg));
         Log::write('发送结果: ['.$ret.']' );
         curl_close($ch);
         
-        
+        return $ret;
         
         
     }
-    
+
+
+    protected function cg($url)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        
+        $ret = curl_exec($ch);
+        //Log::write('发送参数: '.json_encode($msg));
+        Log::write('发送结果: ['.$ret.']' );
+        curl_close($ch);
+        
+        return $ret;
+        
+        
+    }
     
     
     protected function cs($openid, $content) {
@@ -129,6 +147,9 @@ class Msg
         
         $url = 'http://api.weixin.qq.com/cgi-bin/message/custom/send';
         
-        $this->cc($url, $msg);
+        $res = $this->cc($url, $msg);
+
+        
+        return $ret;
     }
 }
