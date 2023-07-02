@@ -71,7 +71,7 @@ class Msg
         $res = Request::param(false);
         Log::write('收到的参数: '.json_encode($res));
 
-        $url = "http://107.173.168.46/echo/".url_encode($res['Content']);
+        $url = "http://107.173.168.46/echo/".urlencode($res['Content']);
         $ret = $this->cg($url );
         $ret = json_decode($ret, true);
         
