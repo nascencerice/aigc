@@ -71,6 +71,16 @@ class Msg
         $res = Request::param(false);
         Log::write('收到的参数: '.json_encode($res));
 
+
+        $content = '';
+        //文本消息
+        if($res['MsgType'] == 'text') {
+            $content = $res['Content'];
+        }else if($res['MsgType'] == 'voice') {
+            $content = $res['Recognition'];
+        }
+
+
         $url = "http://107.173.168.46/echo/".urlencode($res['Content']);
         $ret = $this->cg($url );
         $ret = json_decode($ret, true);
