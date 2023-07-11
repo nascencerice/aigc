@@ -80,12 +80,14 @@ class Msg
             $content = $res['Recognition'];
         }
 
-
-        $url = "http://107.173.168.46/echo/".urlencode($content);
-        $ret = $this->cg($url );
-        $ret = json_decode($ret, true);
+        if(!empty($content)) {
+            $url = "http://107.173.168.46/echo/".urlencode($content);
+            $ret = $this->cg($url );
+            $ret = json_decode($ret, true);
+            
+            $rrr = $this->cs($res['FromUserName'], $ret['result']);
+        }
         
-        $rrr = $this->cs($res['FromUserName'], $ret['result']);
 
         return json(['']);
         
@@ -158,6 +160,6 @@ class Msg
         $res = $this->cc($url, $msg);
 
         
-        return $ret;
+        return $res;
     }
 }
